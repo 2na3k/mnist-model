@@ -8,6 +8,8 @@ from torch.optim import lr_scheduler
 from torch.nn.modules.loss import _Loss
 from torch.utils.data import DataLoader
 
+from tqdm import trange #weird flex but still feel okay with that
+
 from utils import permute_data
 from model import Model
 
@@ -18,7 +20,7 @@ class Trainer(object):
                  criterion: _Loss):
         self.model = model
         self.optim = optim
-        self.loss = loss 
+        self.loss = criterion 
         self._check_optim_net_aligned()
     
     def _check_optim_net_aligned(self):
@@ -54,7 +56,7 @@ class Trainer(object):
             decay = (final_lr_exp / init_lr) ** (1 / (epochs + 1))
             scheduler = lr_scheduler.ExponentialLR(self.optim, gamma=decay)
 
-            for e in range(epochs): 
+            for e in (e := trange(epochs)): 
                 if final_lr_exp:
                     scheduler.step()
                 
