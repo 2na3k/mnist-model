@@ -68,7 +68,7 @@ class Trainer(object):
                     self.model.train()
 
                 for ii, (X_batch, y_batch) in enumerate(batch_generator):
-                    self.optim.zero_grad() 
+                    self.optim.zero_grad()
 
                     output = self.model(X_batch)[0]
 
