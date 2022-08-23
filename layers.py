@@ -23,17 +23,20 @@ class Dense(Layer):
         if dropout < 1.0:
             self.dropout = nn.Dropout(1 - dropout)
         
-        def forward(self, x: Tensor, inference: bool = False) -> Tensor:
-            if inference:
-                self.apply(inference_mode)
-            
-            #multiple with weight, also plus the bias
-            self.linear(x)
+    def forward(self, x: Tensor, inference: bool = False) -> Tensor:
+        if inference:
+            self.apply(inference_mode)
+        
+        #multiple with weight, also plus the bias
+        
+        x = x.contiguous().view(x.size(0), -1)
 
-            if self.activation:
-                x = self.activation(x) #pass the x to the activation function and return again to variable x
-            
-            if hasattr(self, "dropout"):
-                x = self.dropout(x)
-            
-            return x
+        self.linear(x)
+
+        if self.activation:
+            x = self.activation(x) #pass the x to the activation function and return again to variable x
+        
+        if hasattr(self, "dropout"):
+            x = self.dropout(x)
+        
+        return x
