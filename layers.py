@@ -25,11 +25,11 @@ class Dense(Layer):
         
     def forward(self, x: Tensor, inference: bool = False) -> Tensor:
         if inference:
-            self.apply(inference_mode)
+            self.inference_mode()
         
         #multiple with weight, also plus the bias
         
-        x = x.contiguous().view(x.size(0), -1)
+        x = x.view(x.size(0), -1)
 
         self.linear(x)
 
